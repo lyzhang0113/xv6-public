@@ -20,3 +20,7 @@
 #define SYS_link   19
 #define SYS_mkdir  20
 #define SYS_close  21
+
+// Luoyan Zhang Feb 27 2023
+#define SYS_date   22
+#define SYS_ps     23

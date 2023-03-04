@@ -104,6 +104,11 @@ extern int sys_wait(void);
 extern int sys_write(void);
 extern int sys_uptime(void);
 
+// Luoyan Zhang Feb 27 2023
+extern int sys_date(void);
+extern int sys_ps(void);
+// ------------------------
+
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
 [SYS_exit]    sys_exit,
@@ -126,6 +131,10 @@ static int (*syscalls[])(void) = {
 [SYS_link]    sys_link,
 [SYS_mkdir]   sys_mkdir,
 [SYS_close]   sys_close,
+// Luoyan Zhang Feb 27 2023
+[SYS_date]    sys_date,
+[SYS_ps]      sys_ps,
+// ------------------------
 };
 
 void
@@ -136,6 +145,10 @@ syscall(void)
 
   num = curproc->tf->eax;
   if(num > 0 && num < NELEM(syscalls) && syscalls[num]) {
+    // Luoyan Zhang Feb 27 2023
+    // if (num == SYS_date) cprintf("--> syscall.c date\n");
+    // if (num == SYS_ps) cprintf("--> ps.c ps\n");
+    // ------------------------
     curproc->tf->eax = syscalls[num]();
   } else {
     cprintf("%d %s: unknown sys call %d\n",

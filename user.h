@@ -24,6 +24,11 @@ char* sbrk(int);
 int sleep(int);
 int uptime(void);
 
+// Luoyan Zhang Feb 27 2023
+int date(struct rtcdate*);
+int ps(void);
+// ------------------------
+
 // ulib.c
 int stat(const char*, struct stat*);
 char* strcpy(char*, const char*);

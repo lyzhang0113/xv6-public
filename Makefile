@@ -181,6 +181,11 @@ UPROGS=\
 	_usertests\
 	_wc\
 	_zombie\
+	_date\
+	_ps\
+# Luoyan Zhang Feb 27 2023
+# 2 lines before this comment
+# ------------------------
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)

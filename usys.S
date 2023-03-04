@@ -29,3 +29,7 @@ SYSCALL(getpid)
 SYSCALL(sbrk)
 SYSCALL(sleep)
 SYSCALL(uptime)
+
+// Luoyan Zhang Feb 27 2023
+SYSCALL(date)
+SYSCALL(ps)

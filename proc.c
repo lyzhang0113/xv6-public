@@ -532,3 +532,11 @@ procdump(void)
     cprintf("\n");
   }
 }
+
+// Luoyan Zhang Feb 27 2023
+struct proc *
+getprocs(void)
+{
+  return ptable.proc;
+}
+// -----------------------
