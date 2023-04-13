@@ -33,3 +33,7 @@ SYSCALL(uptime)
 // Luoyan Zhang Feb 27 2023
 SYSCALL(date)
 SYSCALL(ps)
+
+// Luoyan Zhang Apr 12 2023
+SYSCALL(renice)
+

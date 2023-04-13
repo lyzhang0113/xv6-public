@@ -38,7 +38,7 @@ sys_ps(void)
 
   procs = getprocs(); // get proc from ptable (method in proc.c)
   
-  cprintf("PID\tName\tState\tParentPID\n");
+  cprintf("PID\tName\tState\tPrio\tParentPID\n"); // Modified Apr 12 2023
 
   for(p = procs; p < &procs[NPROC]; p++){
     if(p->state == UNUSED)
@@ -47,12 +47,27 @@ sys_ps(void)
       state = states[p->state];
     else
       state = "???";
-    cprintf("%d\t%s\t%s\t%d\n", p->pid, p->name, state, p->parent->pid);
+    cprintf("%d\t%s\t%s\t%d\t%d\n", p->pid, p->name, state, p->priority, p->parent->pid); // Modified Apr 12 2023
   }
   return 0;
 }
 // ------------------------
 
+// Luoyan Zhang Apr 12 2023
+extern void setprio(int prio);
+
+int
+sys_renice(void)
+{
+  int prio;
+  //Get Argument for Priority
+  if(argint(0, &prio) < 0) return -1;
+  //Set it in p->priority
+  setprio(prio);
+  //TODO:Move it into appropriate queue
+  return 0;
+}
+// ------------------------------------
 
 int
 sys_fork(void)

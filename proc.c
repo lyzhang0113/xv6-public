@@ -10,6 +10,12 @@
 struct {
   struct spinlock lock;
   struct proc proc[NPROC];
+  // ------------------------
+  // Luoyan Zhang Apr 10 2023
+  // Priority Level 1 is proc
+  struct proc proc0[NPROC]; // Priority Level 0
+  struct proc proc2[NPROC]; // Priority Level 2
+  // ------------------------
 } ptable;
 
 static struct proc *initproc;
@@ -111,6 +117,11 @@ found:
   p->context = (struct context*)sp;
   memset(p->context, 0, sizeof *p->context);
   p->context->eip = (uint)forkret;
+  
+  // ----------------------------
+  // Luoyan Zhang Apr 12 2023
+  p->priority = 1; // Initialize Proc to Priority 1
+  // ---------------------------
 
   return p;
 }
@@ -386,38 +397,38 @@ void
 yield(void)
 {
   acquire(&ptable.lock);  //DOC: yieldlock
-  myproc()->state = RUNNABLE;
-  sched();
-  release(&ptable.lock);
-}
+	  myproc()->state = RUNNABLE;
+	  sched();
+	  release(&ptable.lock);
+	}
 
-// A fork child's very first scheduling by scheduler()
-// will swtch here.  "Return" to user space.
-void
-forkret(void)
-{
-  static int first = 1;
-  // Still holding ptable.lock from scheduler.
-  release(&ptable.lock);
+	// A fork child's very first scheduling by scheduler()
+	// will swtch here.  "Return" to user space.
+	void
+	forkret(void)
+	{
+	  static int first = 1;
+	  // Still holding ptable.lock from scheduler.
+	  release(&ptable.lock);
 
-  if (first) {
-    // Some initialization functions must be run in the context
-    // of a regular process (e.g., they call sleep), and thus cannot
-    // be run from main().
-    first = 0;
-    iinit(ROOTDEV);
-    initlog(ROOTDEV);
-  }
+	  if (first) {
+	    // Some initialization functions must be run in the context
+	    // of a regular process (e.g., they call sleep), and thus cannot
+	    // be run from main().
+	    first = 0;
+	    iinit(ROOTDEV);
+	    initlog(ROOTDEV);
+	  }
 
-  // Return to "caller", actually trapret (see allocproc).
-}
+	  // Return to "caller", actually trapret (see allocproc).
+	}
 
-// Atomically release lock and sleep on chan.
-// Reacquires lock when awakened.
-void
-sleep(void *chan, struct spinlock *lk)
-{
-  struct proc *p = myproc();
+	// Atomically release lock and sleep on chan.
+	// Reacquires lock when awakened.
+	void
+	sleep(void *chan, struct spinlock *lk)
+	{
+	  struct proc *p = myproc();
   
   if(p == 0)
     panic("sleep");
@@ -538,5 +549,11 @@ struct proc *
 getprocs(void)
 {
   return ptable.proc;
+}
+// Luoyan Zhang Apr 12 2023
+void
+setprio(int prio)
+{
+  myproc()->priority = prio;
 }
 // -----------------------

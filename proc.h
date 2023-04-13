@@ -49,6 +49,10 @@ struct proc {
   struct file *ofile[NOFILE];  // Open files
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
+  // ------------------------------------------------------
+  // Luoyan Zhang Apr 10 2023
+  int priority;                // Process Priority used in MLFQ Scheduler
+  // -----------------------------------------------------
 };
 
 // Process memory is laid out contiguously, low addresses first:

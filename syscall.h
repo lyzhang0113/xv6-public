@@ -24,3 +24,5 @@
 // Luoyan Zhang Feb 27 2023
 #define SYS_date   22
 #define SYS_ps     23
+// Luoyan Zhang Apr 12 2023
+#define SYS_renice 24

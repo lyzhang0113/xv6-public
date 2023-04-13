@@ -107,6 +107,8 @@ extern int sys_uptime(void);
 // Luoyan Zhang Feb 27 2023
 extern int sys_date(void);
 extern int sys_ps(void);
+// Luoyan Zhang Apr 12 2023
+extern int sys_renice(void);
 // ------------------------
 
 static int (*syscalls[])(void) = {
@@ -134,6 +136,8 @@ static int (*syscalls[])(void) = {
 // Luoyan Zhang Feb 27 2023
 [SYS_date]    sys_date,
 [SYS_ps]      sys_ps,
+// Luoyan Zhang Apr 12 2023
+[SYS_renice]  sys_renice,
 // ------------------------
 };
 

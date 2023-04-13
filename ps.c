@@ -13,6 +13,7 @@ int test(void) {
   if (pid < 0) return -1;
   else if (pid == 0) {
     // child
+    renice(0);
     sleep(100);
     exit();
   } else {
