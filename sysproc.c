@@ -54,18 +54,16 @@ sys_ps(void)
 // ------------------------
 
 // Luoyan Zhang Apr 12 2023
-extern void setprio(int prio);
+extern int setprio(int pid, int priority);
 
 int
 sys_renice(void)
 {
-  int prio;
+  int pid, priority;
   //Get Argument for Priority
-  if(argint(0, &prio) < 0) return -1;
-  //Set it in p->priority
-  setprio(prio);
-  //TODO:Move it into appropriate queue
-  return 0;
+  if(argint(0, &pid) < 0 || argint(1, &priority) < 0) return -1;
+
+  return setprio(pid, priority); // defined in proc.c
 }
 // ------------------------------------
 

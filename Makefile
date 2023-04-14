@@ -183,10 +183,10 @@ UPROGS=\
 	_zombie\
 	_date\
 	_ps\
-	_renice\
+	_testmlfq\
 # Luoyan Zhang Feb 27 2023
 # 2 lines before this comment (date and ps)
-# 1 more line on Apr 12 2023 (renice)
+# 1 more line on Apr 12 2023 (testmlfq)
 # ------------------------
 
 fs.img: mkfs README $(UPROGS)

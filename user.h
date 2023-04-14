@@ -28,7 +28,7 @@ int uptime(void);
 int date(struct rtcdate*);
 int ps(void);
 // Luoyan Zhang Apr 12 2023
-int renice(int prio);
+int renice(int pid, int priority);
 // ------------------------
 
 // ulib.c

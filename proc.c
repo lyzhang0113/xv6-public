@@ -10,12 +10,6 @@
 struct {
   struct spinlock lock;
   struct proc proc[NPROC];
-  // ------------------------
-  // Luoyan Zhang Apr 10 2023
-  // Priority Level 1 is proc
-  struct proc proc0[NPROC]; // Priority Level 0
-  struct proc proc2[NPROC]; // Priority Level 2
-  // ------------------------
 } ptable;
 
 static struct proc *initproc;
@@ -343,26 +337,44 @@ scheduler(void)
 
     // Loop over process table looking for process to run.
     acquire(&ptable.lock);
-    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-      if(p->state != RUNNABLE)
-        continue;
+    // --------------------------------------------------
+    // Luoyan Zhang Apr 13 2023
+    for(int priority = 0; priority < 3; priority++) {
+    // --------------------------------------------------
+      for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+        // -------------------------------------------------
+	// Luoyan Zhang Apr 14 2023
+        // continue if not desired priority
+        if(p->state != RUNNABLE || p->priority != priority)
+          continue;
+	// ------------------------------------------------
 
-      // Switch to chosen process.  It is the process's job
-      // to release ptable.lock and then reacquire it
-      // before jumping back to us.
-      c->proc = p;
-      switchuvm(p);
-      p->state = RUNNING;
+        // Switch to chosen process.  It is the process's job
+        // to release ptable.lock and then reacquire it
+        // before jumping back to us.
+        c->proc = p;
+        switchuvm(p);
+        p->state = RUNNING;
 
-      swtch(&(c->scheduler), p->context);
-      switchkvm();
+        swtch(&(c->scheduler), p->context);
+        switchkvm();
 
-      // Process is done running for now.
-      // It should have changed its p->state before coming back.
-      c->proc = 0;
+        // Process is done running for now.
+        // It should have changed its p->state before coming back.
+        c->proc = 0;
+
+	// ------------------------------
+	// Luoyan Zhang Apr 13 2023
+	// After Process is done for now,
+	// Start with Priority 0 Again
+	priority = 0;
+	// -----------------------------
+      }
+    // --------------------------
+    // Luoyan Zhang Apr 13 2023
     }
+    // --------------------------
     release(&ptable.lock);
-
   }
 }
 
@@ -544,6 +556,7 @@ procdump(void)
   }
 }
 
+// ---------------------------------------
 // Luoyan Zhang Feb 27 2023
 struct proc *
 getprocs(void)
@@ -551,9 +564,21 @@ getprocs(void)
   return ptable.proc;
 }
 // Luoyan Zhang Apr 12 2023
-void
-setprio(int prio)
+
+int
+setprio(int pid, int priority)
 {
-  myproc()->priority = prio;
+  struct proc *p;
+  acquire(&ptable.lock);
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
+    if(p->pid == pid) {
+      p->priority = priority;
+      release(&ptable.lock);
+      return 0;
+    }
+  }
+  release(&ptable.lock);
+  return -1;
 }
+
 // -----------------------
